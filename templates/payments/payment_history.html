@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block page_title %}Payment History{% endblock %}
+
+{% block content %}
+<style>
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .btn-primary {
+        background: #e94560;
+        color: white;
+    }
+    
+    .payments-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .payments-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 15px;
+        text-align: left;
+    }
+    
+    .payments-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .amount {
+        font-weight: bold;
+        color: #2ecc71;
+    }
+    
+    .status-paid {
+        background: #d4edda;
+        color: #155724;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        display: inline-block;
+    }
+</style>
+
+<div>
+    <a href="{{ url_for('add_payment') }}" class="btn btn-primary">💰 Add Payment</a>
+    <a href="{{ url_for('pending_payments') }}" class="btn btn-primary" style="background: #e74c3c;">⏰ Pending Payments</a>
+</div>
+
+<table class="payments-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Member Name</th>
+            <th>Amount</th>
+            <th>Payment Date</th>
+            <th>Due Date</th>
+            <th>Method</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if payments %}
+            {% for payment in payments %}
+            <tr>
+                <td>{{ payment[0] }}</td>
+                <td><strong>{{ payment[7] }}</strong></td>
+                <td class="amount">₹{{ payment[2] }}</td>
+                <td>{{ payment[3] }}</td>
+                <td>{{ payment[4] }}</td>
+                <td>{{ payment[5]|upper }}</td>
+                <td><span class="status-paid">{{ payment[6]|upper }}</span></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px;">No payments recorded</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

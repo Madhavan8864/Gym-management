@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block page_title %}Slot Occupancy Report{% endblock %}
+
+{% block content %}
+<style>
+    .report-summary {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<h2>📈 Slot Occupancy Report</h2>
+
+{% for slot in report %}
+<div class="report-summary">
+    <h3>{{ slot.slot_name }} ({{ slot.start_time }} - {{ slot.end_time }})</h3>
+    <div style="margin-top: 10px;">
+        <div>📌 Occupancy: {{ slot.status.total_members }} / {{ slot.status.max_capacity }}</div>
+        <div>📊 Fill Rate: {{ slot.status.percentage }}%</div>
+        <div>✅ Available Spots: {{ slot.status.available }}</div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

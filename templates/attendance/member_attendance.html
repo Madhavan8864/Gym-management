@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block page_title %}Member Attendance History{% endblock %}
+
+{% block content %}
+<style>
+    .member-info {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .attendance-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .attendance-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+    
+    .attendance-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #eee;
+    }
+</style>
+
+<div class="member-info">
+    <h3>{{ member[1] }}</h3>
+    <p>Phone: {{ member[2] }} | Member ID: #{{ member[0] }}</p>
+</div>
+
+<h3>Attendance History</h3>
+
+<table class="attendance-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Duration</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if history %}
+            {% for record in history %}
+            <tr>
+                <td>{{ record[2] if record[2] else record['attendance_date'] }}</td>
+                <td>{{ record[3] if record[3] else record['checkin_time'] }}</td>
+                <td>{{ record[4] if record[4] else record['checkout_time'] if record['checkout_time'] else 'Still Inside' }}</td>
+                <td>{{ record[5] if record[5] else record['duration'] if record['duration'] else '-' }} mins</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 40px;">No attendance records found</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

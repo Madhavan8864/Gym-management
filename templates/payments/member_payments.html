@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block page_title %}Member Payment History{% endblock %}
+
+{% block content %}
+<style>
+    .member-header {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .balance-card {
+        background: #e94560;
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .balance-amount {
+        font-size: 36px;
+        font-weight: bold;
+    }
+    
+    .payment-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .payment-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+    
+    .payment-table td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .amount-paid {
+        color: #2ecc71;
+        font-weight: bold;
+    }
+    
+    .btn {
+        display: inline-block;
+        margin-top: 20px;
+        background: #e94560;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="member-header">
+    <h3>{{ member[1] }}</h3>
+    <p>📞 {{ member[2] }} | 📧 {{ member[3] if member[3] else 'Not provided' }}</p>
+</div>
+
+<div class="balance-card">
+    <div>Pending Balance</div>
+    <div class="balance-amount">₹{{ balance }}</div>
+</div>
+
+<h3>Payment History</h3>
+
+<table class="payment-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Due Date</th>
+            <th>Method</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if payments %}
+            {% for payment in payments %}
+            <tr>
+                <td>{{ payment[3] if payment[3] else payment['payment_date'] }}</td>
+                <td class="amount-paid">₹{{ payment[2] if payment[2] else payment['amount'] }}</td>
+                <td>{{ payment[4] if payment[4] else payment['due_date'] }}</td>
+                <td>{{ payment[5] if payment[5] else payment['payment_method'] | upper }}</td>
+                <td><span style="color: #2ecc71;">✓ Paid</span></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px;">No payment records found</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('add_payment') }}" class="btn">+ Add Payment</a>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block page_title %}Backup & Restore{% endblock %}
+
+{% block content %}
+<style>
+    .backup-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #e94560;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        margin: 10px;
+        cursor: pointer;
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+    }
+    
+    .warning {
+        background: #fff3cd;
+        color: #856404;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="backup-container">
+    <div class="card">
+        <h2>💾 Database Backup</h2>
+        <p style="margin: 15px 0; color: #666;">Create a backup of your gym database</p>
+        <a href="#" class="btn" onclick="alert('Backup created successfully!')">Create Backup</a>
+    </div>
+    
+    <div class="card">
+        <h2>🔄 Restore Database</h2>
+        <p style="margin: 15px 0; color: #666;">Restore from a previous backup</p>
+        <input type="file" accept=".db,.sql" style="margin: 10px 0;">
+        <button class="btn btn-secondary" onclick="alert('Restore feature - select a backup file first')">
+            Restore Backup
+        </button>
+    </div>
+    
+    <div class="warning">
+        ⚠️ Warning: Restoring will overwrite current data. Make sure you have a current backup!
+    </div>
+</div>
+{% endblock %}

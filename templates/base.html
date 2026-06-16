@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Left Sidebar - Modern Design */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 10px;
+        }
+        
+        .logo h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .logo p {
+            font-size: 11px;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 10px 15px;
+            overflow-y: auto;
+        }
+        
+        /* Custom scrollbar for nav */
+        .nav-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .nav-menu::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-menu::-webkit-scrollbar-thumb {
+            background: #e94560;
+        }
+        
+        .nav-item {
+            padding: 12px 18px;
+            margin: 4px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateX(5px);
+        }
+        
+        .nav-item.active {
+            background: #e94560;
+            box-shadow: 0 4px 15px rgba(233,69,96,0.3);
+        }
+        
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            width: 28px;
+            text-align: center;
+        }
+        
+        /* Section divider in nav */
+        .nav-divider {
+            padding: 15px 18px 8px 18px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-top: 10px;
+        }
+        
+        .nav-divider:first-of-type {
+            border-top: none;
+            margin-top: 0;
+        }
+        
+        /* Sub-menu items */
+        .nav-subitem {
+            padding: 10px 18px 10px 52px;
+            margin: 2px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-subitem:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(3px);
+        }
+        
+        .nav-subitem a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 13px;
+            flex: 1;
+        }
+        
+        .nav-subitem .nav-icon {
+            font-size: 16px;
+            width: 24px;
+        }
+        
+        /* Right Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: #f0f2f5;
+        }
+        
+        .top-bar {
+            background: white;
+            padding: 18px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #1a1a2e, #e94560);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .datetime {
+            text-align: right;
+            background: #f8f9fa;
+            padding: 8px 18px;
+            border-radius: 50px;
+        }
+        
+        .date {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .time {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e94560;
+            font-family: monospace;
+        }
+        
+        .content-area {
+            padding: 25px 30px;
+            flex: 1;
+        }
+        
+        /* Flash Messages */
+        .flash-message {
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            animation: slideDown 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .flash-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .flash-error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Scrollbar */
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .main-content::-webkit-scrollbar-track {
+            background: #e9ecef;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 10px;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #e94560;
+        }
+        
+        /* Real-time indicator */
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar .logo h2, .sidebar .logo p, .nav-item a, .nav-subitem a {
+                display: none;
+            }
+            
+            .nav-item, .nav-subitem {
+                justify-content: center;
+                padding: 12px;
+            }
+            
+            .nav-icon {
+                font-size: 22px;
+                margin: 0;
+            }
+            
+            .page-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>💪 GYM TRACKER</h2>
+            <p>Real-time Management</p>
+        </div>
+        
+        <div class="nav-menu">
+            <!-- Main Menu -->
+            <div class="nav-item">
+                <span class="nav-icon">📊</span>
+                <a href="{{ url_for('live_dashboard') }}">Dashboard <span class="live-indicator"></span></a>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👥</span>
+                <a href="{{ url_for('view_members') }}">Members</a>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🏋️</span>
+                <a href="{{ url_for('view_trainers') }}">Trainers</a>
+            </div>
+            
+            <div class="nav-divider">ATTENDANCE</div>
+            <div class="nav-item">
+                <span class="nav-icon">✅</span>
+                <a href="{{ url_for('checkin') }}">Check In</a>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🚪</span>
+                <a href="{{ url_for('checkout') }}">Check Out</a>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">⚡</span>
+                <a href="{{ url_for('quick_checkin') }}">Quick Checkin</a>
+            </div>
+            
+            <div class="nav-divider">MANAGEMENT</div>
+            <div class="nav-item">
+                <span class="nav-icon">⏰</span>
+                <a href="{{ url_for('manage_slots') }}">Time Slots</a>
+            </div>
+            
+            <div class="nav-divider">FINANCE</div>
+            <div class="nav-item">
+                <span class="nav-icon">💰</span>
+                <a href="{{ url_for('view_payments') }}">Payments</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">📊</span>
+                <a href="{{ url_for('revenue_report') }}">Revenue Report</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">📅</span>
+                <a href="{{ url_for('monthly_collection') }}">Monthly Collection</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">⏰</span>
+                <a href="{{ url_for('pending_payments') }}">Pending Dues</a>
+            </div>
+            
+            <div class="nav-divider">REPORTS</div>
+            <div class="nav-item">
+                <span class="nav-icon">📈</span>
+                <a href="{{ url_for('daily_report') }}">Daily Report</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">📊</span>
+                <a href="{{ url_for('trainer_report') }}">Trainer Report</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">⏰</span>
+                <a href="{{ url_for('slot_report') }}">Slot Report</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">👥</span>
+                <a href="{{ url_for('active_members') }}">Active Members</a>
+            </div>
+            
+            <div class="nav-divider">SETTINGS</div>
+            <div class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <a href="{{ url_for('gym_settings') }}">Gym Settings</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">👤</span>
+                <a href="{{ url_for('user_settings') }}">User Settings</a>
+            </div>
+            <div class="nav-subitem">
+                <span class="nav-icon">💾</span>
+                <a href="{{ url_for('backup_restore') }}">Backup & Restore</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="top-bar">
+            <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+            <div class="datetime">
+                <div class="date" id="current_date"></div>
+                <div class="time" id="current_time"></div>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <span>{% if category == 'success' %}✅{% else %}❌{% endif %}</span>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const time = now.toLocaleTimeString('en-IN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            document.getElementById('current_date').innerHTML = date;
+            document.getElementById('current_time').innerHTML = time;
+        }
+        
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        // Active menu highlighting
+        document.querySelectorAll('.nav-item a, .nav-subitem a').forEach(link => {
+            if (link.href === window.location.href) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block page_title %}Assign Member to Slot{% endblock %}
+
+{% block content %}
+<style>
+    .assign-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .btn-submit {
+        background: #e94560;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
+    
+    .member-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="assign-container">
+    <div class="card">
+        <h2 style="margin-bottom: 20px;">Assign Time Slot</h2>
+        
+        <div class="member-info">
+            <strong>Member:</strong> {{ member[1] }}<br>
+            <strong>Phone:</strong> {{ member[2] }}
+        </div>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>Select Time Slot</label>
+                <select name="slot_id" required>
+                    <option value="">-- Select Time Slot --</option>
+                    {% for slot in slots %}
+                    <option value="{{ slot[0] }}" {% if member[5] == slot[0] %}selected{% endif %}>
+                        {{ slot[1] }} ({{ slot[2] }} - {{ slot[3] }}) - Max: {{ slot[4] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-submit">Assign Slot</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

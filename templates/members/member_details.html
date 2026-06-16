@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block page_title %}Member Details{% endblock %}
+
+{% block content %}
+<style>
+    .details-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .details-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .avatar {
+        font-size: 80px;
+        background: #e94560;
+        width: 120px;
+        height: 120px;
+        border-radius: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+    }
+    
+    .details-row {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+    }
+    
+    .details-label {
+        font-weight: bold;
+        width: 40%;
+        color: #666;
+    }
+    
+    .details-value {
+        width: 60%;
+        color: #333;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .btn-back {
+        display: inline-block;
+        background: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="details-card">
+    <div class="details-header">
+        <div class="avatar">👤</div>
+        <h2>{{ member[1] }}</h2>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Member ID</div>
+        <div class="details-value">#{{ member[0] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Phone</div>
+        <div class="details-value">{{ member[2] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Email</div>
+        <div class="details-value">{{ member[3] if member[3] else 'Not provided' }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Join Date</div>
+        <div class="details-value">{{ member[6] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Status</div>
+        <div class="details-value">
+            <span class="status-badge status-{{ member[8] }}">
+                {{ member[8]|upper }}
+            </span>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{{ url_for('view_members') }}" class="btn-back">← Back to Members</a>
+    </div>
+</div>
+{% endblock %}

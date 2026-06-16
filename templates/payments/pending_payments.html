@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block page_title %}Pending Payments{% endblock %}
+
+{% block content %}
+<style>
+    .pending-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .pending-table th {
+        background: #e74c3c;
+        color: white;
+        padding: 15px;
+        text-align: left;
+    }
+    
+    .pending-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .due-date {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    
+    .btn-remind {
+        background: #ffc107;
+        color: #333;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+</style>
+
+<h2>⏰ Members with Pending Payments</h2>
+
+{% if pending %}
+    <table class="pending-table">
+        <thead>
+            <tr>
+                <th>Member Name</th>
+                <th>Phone</th>
+                <th>Due Amount</th>
+                <th>Due Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in pending %}
+            <tr>
+                <td><strong>{{ payment[7] }}</strong></td>
+                <td>{{ payment[8] }}</td>
+                <td class="amount">₹{{ payment[2] }}</td>
+                <td class="due-date">{{ payment[4] }}</td>
+                <td>
+                    <a href="{{ url_for('add_payment') }}" class="btn-remind">💰 Record Payment</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div style="background: white; border-radius: 15px; padding: 40px; text-align: center;">
+        ✅ No pending payments! All members are up to date.
+    </div>
+{% endif %}
+{% endblock %}

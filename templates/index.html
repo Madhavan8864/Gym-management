@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block page_title %}Welcome to Gym Management System{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        color: white;
+        margin-bottom: 40px;
+    }
+    
+    .hero h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    
+    .hero p {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+    
+    .btn-start {
+        display: inline-block;
+        background: white;
+        color: #667eea;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.3s;
+    }
+    
+    .btn-start:hover {
+        transform: scale(1.05);
+    }
+    
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .feature {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .feature-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+    
+    .feature h3 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 40px;
+    }
+    
+    .stat-box {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        color: #e94560;
+    }
+</style>
+
+<div class="hero">
+    <h1>💪 Gym Management System</h1>
+    <p>Real-time Member Tracking & Attendance Management</p>
+    <a href="{{ url_for('live_dashboard') }}" class="btn-start">Go to Dashboard →</a>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <div class="feature-icon">👥</div>
+        <h3>Member Management</h3>
+        <p>Add, edit, and manage all gym members</p>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">✅</div>
+        <h3>Real-time Check-in</h3>
+        <p>Track who's inside the gym right now</p>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">🏋️</div>
+        <h3>Trainer Assignment</h3>
+        <p>Assign trainers to members</p>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">💰</div>
+        <h3>Payment Tracking</h3>
+        <p>Track fees and pending payments</p>
+    </div>
+</div>
+{% endblock %}

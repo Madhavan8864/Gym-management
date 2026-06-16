@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block page_title %}Edit Trainer{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .btn-submit {
+        background: #e94560;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        flex: 1;
+    }
+    
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        flex: 1;
+    }
+</style>
+
+<div class="form-container">
+    <h2 style="margin-bottom: 25px;">✏️ Edit Trainer</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" value="{{ trainer[1] }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Speciality</label>
+            <input type="text" name="speciality" value="{{ trainer[2] }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" value="{{ trainer[3] }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Available Slots</label>
+            <input type="text" name="available_slots" value="{{ trainer[4] }}">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Update Trainer</button>
+            <a href="{{ url_for('view_trainers') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

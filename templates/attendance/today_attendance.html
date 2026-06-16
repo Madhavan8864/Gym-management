@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block page_title %}Today's Attendance{% endblock %}
+
+{% block content %}
+<style>
+    .attendance-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .attendance-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 15px;
+        text-align: left;
+    }
+    
+    .attendance-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .status-inside {
+        color: #2ecc71;
+        font-weight: bold;
+    }
+    
+    .status-outside {
+        color: #e74c3c;
+    }
+</style>
+
+<h2>📅 Attendance for Today</h2>
+
+<table class="attendance-table">
+    <thead>
+        <tr>
+            <th>Member Name</th>
+            <th>Check-in Time</th>
+            <th>Check-out Time</th>
+            <th>Duration</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if attendance %}
+            {% for att in attendance %}
+            <tr>
+                <td><strong>{{ att[6] }}</strong></td>
+                <td>{{ att[3] }}</td>
+                <td>{{ att[4] if att[4] else '-' }}</td>
+                <td>{{ att[5] if att[5] else '-' }} mins</td>
+                <td>
+                    {% if att[4] %}
+                        <span class="status-outside">✅ Checked Out</span>
+                    {% else %}
+                        <span class="status-inside">🟢 Inside Gym</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px;">No attendance recorded today</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

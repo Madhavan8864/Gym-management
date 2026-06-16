@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block page_title %}Member Check-in{% endblock %}
+
+{% block content %}
+<style>
+    .checkin-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+    
+    .time-display {
+        font-size: 48px;
+        font-weight: bold;
+        color: #e94560;
+        margin: 20px 0;
+    }
+    
+    .date-display {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 30px;
+    }
+    
+    .member-select {
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .btn-checkin {
+        background: #2ecc71;
+        color: white;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+    }
+    
+    .btn-checkin:hover {
+        background: #27ae60;
+    }
+    
+    .info-text {
+        margin-top: 20px;
+        color: #666;
+        font-size: 14px;
+    }
+</style>
+
+<div class="checkin-container">
+    <div class="card">
+        <h2>✅ Member Check-in</h2>
+        
+        <div class="time-display" id="current_time_display"></div>
+        <div class="date-display" id="current_date_display"></div>
+        
+        <form method="POST">
+            <select name="member_id" class="member-select" required>
+                <option value="">Select Member</option>
+                {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }} - {{ member[2] }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit" class="btn-checkin">🟢 Check In</button>
+        </form>
+        
+        <div class="info-text">
+            ⚡ Member will be marked as present for today's session
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('current_time_display').innerHTML = now.toLocaleTimeString('en-IN');
+        document.getElementById('current_date_display').innerHTML = now.toLocaleDateString('en-IN', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+    
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+</script>
+{% endblock %}

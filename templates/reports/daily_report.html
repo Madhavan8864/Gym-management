@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block page_title %}Daily Report{% endblock %}
+
+{% block content %}
+<style>
+    .report-header {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .report-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-box {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        color: #e94560;
+    }
+    
+    .report-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        width: 100%;
+    }
+    
+    .report-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+    
+    .report-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #eee;
+    }
+</style>
+
+<div class="report-header">
+    <h2>📊 Daily Report</h2>
+    <div>
+        <input type="date" id="datePicker" value="{{ report.date }}" 
+               onchange="window.location.href='/reports/daily?date=' + this.value">
+    </div>
+</div>
+
+<div class="report-stats">
+    <div class="stat-box">
+        <div class="stat-number">{{ report.total_checkins }}</div>
+        <div>Total Check-ins</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ report.unique_members }}</div>
+        <div>Unique Members</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ report.avg_duration }}</div>
+        <div>Avg Duration (mins)</div>
+    </div>
+</div>
+
+<h3>Attendance Details</h3>
+<table class="report-table">
+    <thead>
+        <tr>
+            <th>Member Name</th>
+            <th>Check-in Time</th>
+            <th>Check-out Time</th>
+            <th>Duration</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for att in report.attendance_list %}
+        <tr>
+            <td>{{ att[6] }}</td>
+            <td>{{ att[3] }}</td>
+            <td>{{ att[4] if att[4] else 'Still Inside' }}</td>
+            <td>{{ att[5] if att[5] else '-' }} mins</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

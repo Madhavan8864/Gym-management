@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block page_title %}Trainer Details{% endblock %}
+
+{% block content %}
+<style>
+    .details-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .details-row {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+    }
+    
+    .details-label {
+        font-weight: bold;
+        width: 35%;
+        color: #666;
+    }
+    
+    .details-value {
+        width: 65%;
+    }
+    
+    .member-list {
+        margin-top: 10px;
+    }
+    
+    .member-item {
+        padding: 8px;
+        background: #f8f9fa;
+        margin: 5px 0;
+        border-radius: 8px;
+    }
+    
+    .btn-back {
+        display: inline-block;
+        background: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="details-card">
+    <h2 style="margin-bottom: 25px;">🏋️ Trainer Details</h2>
+    
+    <div class="details-row">
+        <div class="details-label">Trainer ID</div>
+        <div class="details-value">#{{ trainer[0] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Name</div>
+        <div class="details-value">{{ trainer[1] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Speciality</div>
+        <div class="details-value">{{ trainer[2] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Phone</div>
+        <div class="details-value">{{ trainer[3] }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Available Slots</div>
+        <div class="details-value">{{ trainer[4] if trainer[4] else 'Flexible' }}</div>
+    </div>
+    
+    <div class="details-row">
+        <div class="details-label">Assigned Members</div>
+        <div class="details-value">
+            <div class="member-list">
+                {% if schedule %}
+                    {% for member in schedule %}
+                    <div class="member-item">
+                        {{ member[0] }} - {{ member[1] }}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    No members assigned
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <a href="{{ url_for('view_trainers') }}" class="btn-back">← Back to Trainers</a>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block page_title %}User Settings{% endblock %}
+
+{% block content %}
+<style>
+    .settings-container {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .btn-save {
+        background: #e94560;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
+</style>
+
+<div class="settings-container">
+    <div class="card">
+        <h2 style="margin-bottom: 25px;">👤 User Settings</h2>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" name="current_password" placeholder="Enter current password">
+            </div>
+            
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" name="new_password" placeholder="Enter new password">
+            </div>
+            
+            <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" name="confirm_password" placeholder="Confirm new password">
+            </div>
+            
+            <button type="submit" class="btn-save">Change Password</button>
+        </form>
+        
+        <hr style="margin: 30px 0;">
+        
+        <h3>Preferences</h3>
+        <div class="form-group">
+            <label>Dashboard Auto-refresh (seconds)</label>
+            <select style="width: 100%; padding: 10px;">
+                <option>10 seconds</option>
+                <option>15 seconds</option>
+                <option>30 seconds</option>
+                <option>60 seconds</option>
+            </select>
+        </div>
+        
+        <button class="btn-save" style="background: #6c757d;" onclick="alert('Preferences saved!')">
+            Save Preferences
+        </button>
+    </div>
+</div>
+{% endblock %}

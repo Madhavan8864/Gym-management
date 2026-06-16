@@ -1,0 +1,17 @@
+{% for slot in slots %}
+<div style="margin-bottom: 15px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+        <span>
+            <span class="slot-badge slot-morning">{{ slot.slot_name }}</span>
+            ({{ slot.start_time }} - {{ slot.end_time }})
+        </span>
+        <span>{{ slot.status.total_members }} / {{ slot.status.max_capacity }} members</span>
+    </div>
+    <div style="background: #eee; border-radius: 10px; overflow: hidden;">
+        <div style="background: #e94560; width: {{ slot.status.percentage }}%; height: 8px;"></div>
+    </div>
+    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+        Available: {{ slot.status.available }} spots
+    </div>
+</div>
+{% endfor %}

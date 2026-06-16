@@ -1,0 +1,736 @@
+{% extends "base.html" %}
+
+{% block page_title %}Live Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    /* Modern Dashboard Styles */
+    :root {
+        --primary: #e94560;
+        --primary-dark: #c73e56;
+        --secondary: #0f3460;
+        --success: #2ecc71;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --info: #3498db;
+        --dark: #1a1a2e;
+        --light: #f8f9fa;
+        --gray: #6c757d;
+        --border-radius: 16px;
+        --box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        --box-shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 0;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--box-shadow-hover);
+    }
+    
+    .stat-inner {
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .stat-left {
+        flex: 1;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--gray);
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    
+    .stat-number {
+        font-size: 42px;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+    
+    .stat-trend {
+        font-size: 12px;
+        color: var(--success);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(233,69,96,0.1), rgba(15,52,96,0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
+    
+    .dashboard-section {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 32px;
+        overflow: hidden;
+    }
+    
+    .section-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-title-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+    }
+    
+    .badge-count {
+        background: var(--primary);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .member-list-container {
+        max-height: 450px;
+        overflow-y: auto;
+    }
+    
+    .member-list-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .member-list-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    .member-list-container::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 3px;
+    }
+    
+    .member-item {
+        padding: 16px 24px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+    
+    .member-item:hover {
+        background: var(--light);
+        transform: translateX(5px);
+    }
+    
+    .member-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .member-avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    .member-details {
+        flex: 1;
+    }
+    
+    .member-name {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 16px;
+        margin-bottom: 4px;
+    }
+    
+    .member-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 12px;
+        color: var(--gray);
+        flex-wrap: wrap;
+    }
+    
+    .member-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    
+    .status-inside {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--success);
+    }
+    
+    .status-outside {
+        background: rgba(108, 117, 125, 0.15);
+        color: var(--gray);
+    }
+    
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--success);
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        display: inline-block;
+    }
+    
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.5;
+            transform: scale(1.2);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    .slots-grid {
+        padding: 20px 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .slot-card {
+        background: var(--light);
+        border-radius: 12px;
+        padding: 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .slot-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--box-shadow);
+    }
+    
+    .slot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    
+    .slot-name {
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--dark);
+    }
+    
+    .slot-time {
+        font-size: 12px;
+        color: var(--gray);
+    }
+    
+    .slot-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+    
+    .progress-bar {
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+    }
+    
+    .progress-fill-low {
+        background: var(--success);
+    }
+    
+    .progress-fill-medium {
+        background: var(--warning);
+    }
+    
+    .progress-fill-high {
+        background: var(--danger);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--gray);
+    }
+    
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .empty-state h4 {
+        margin-bottom: 8px;
+        color: var(--dark);
+    }
+    
+    .refresh-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--gray);
+    }
+    
+    .refresh-spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #e0e0e0;
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none;
+    }
+    
+    .refresh-spinner-active {
+        display: block;
+    }
+    
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        
+        .member-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .member-status {
+            align-self: flex-start;
+        }
+        
+        .slots-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-inner">
+            <div class="stat-left">
+                <div class="stat-label">Total Members</div>
+                <div class="stat-number">{{ data.total_members }}</div>
+                <div class="stat-trend">📈 +12% this month</div>
+            </div>
+            <div class="stat-icon">👥</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-inner">
+            <div class="stat-left">
+                <div class="stat-label">Active Members</div>
+                <div class="stat-number">{{ data.active_members }}</div>
+                <div class="stat-trend">✅ Active now</div>
+            </div>
+            <div class="stat-icon">💪</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-inner">
+            <div class="stat-left">
+                <div class="stat-label">Trainers</div>
+                <div class="stat-number">{{ data.total_trainers }}</div>
+                <div class="stat-trend">🏋️ Available</div>
+            </div>
+            <div class="stat-icon">🏋️</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-inner">
+            <div class="stat-left">
+                <div class="stat-label">Currently Inside</div>
+                <div class="stat-number" id="inside_count" style="color: var(--success);">{{ data.current_inside }}</div>
+                <div class="stat-trend">🟢 Live now</div>
+            </div>
+            <div class="stat-icon">🏃</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-inner">
+            <div class="stat-left">
+                <div class="stat-label">Today's Check-ins</div>
+                <div class="stat-number">{{ data.today_checkins }}</div>
+                <div class="stat-trend">📅 Today</div>
+            </div>
+            <div class="stat-icon">✅</div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-inner">
+            <div class="stat-left">
+                <div class="stat-label">Pending Payments</div>
+                <div class="stat-number" style="color: var(--warning);">{{ data.pending_payments }}</div>
+                <div class="stat-trend">💰 Due amount</div>
+            </div>
+            <div class="stat-icon">💳</div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-section">
+    <div class="section-header">
+        <div class="section-title">
+            <div class="section-title-icon">🟢</div>
+            <span>Currently Inside Gym</span>
+            <span class="badge-count" id="inside_badge">{{ data.current_inside }}</span>
+        </div>
+        <div class="refresh-indicator">
+            <div class="refresh-spinner" id="refreshSpinner"></div>
+            <span>Auto-refresh every 10s</span>
+        </div>
+    </div>
+    
+    <div class="member-list-container" id="inside_members_list">
+        {% if data.inside_members %}
+            {% for member in data.inside_members %}
+            <div class="member-item">
+                <div class="member-info">
+                    <div class="member-avatar">{{ member[1][0]|upper }}</div>
+                    <div class="member-details">
+                        <div class="member-name">{{ member[1] }}</div>
+                        <div class="member-meta">
+                            <span>🏋️ Trainer: {{ member[3] if member[3] else 'Not Assigned' }}</span>
+                            <span>📞 {{ member[2] if member[2] else 'No phone' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-status">
+                    <div class="status-badge status-inside">
+                        <span class="live-dot"></span>
+                        Since: {{ member[4] }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🏋️‍♂️</div>
+                <h4>No members inside</h4>
+                <p>The gym is empty right now. Members will appear here when they check in.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="dashboard-section">
+    <div class="section-header">
+        <div class="section-title">
+            <div class="section-title-icon">📅</div>
+            <span>Today's Attendance</span>
+            <span class="badge-count">{{ data.today_checkins }}</span>
+        </div>
+    </div>
+    
+    <div class="member-list-container">
+        {% if data.today_attendance %}
+            {% for att in data.today_attendance %}
+            <div class="member-item">
+                <div class="member-info">
+                    <div class="member-avatar" style="background: linear-gradient(135deg, var(--secondary), var(--dark));">
+                        {{ att[6][0]|upper if att[6] else '?' }}
+                    </div>
+                    <div class="member-details">
+                        <div class="member-name">{{ att[6] if att[6] else 'Unknown' }}</div>
+                        <div class="member-meta">
+                            <span>🏋️ Trainer: {{ att[8] if att[8] else 'Not Assigned' }}</span>
+                            <span>⏰ Check-in: {{ att[3] }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-status">
+                    {% if att[4] %}
+                        <div class="status-badge status-outside">
+                            ✅ Checked out at {{ att[4] }}
+                        </div>
+                    {% else %}
+                        <div class="status-badge status-inside">
+                            <span class="live-dot"></span>
+                            Still Inside
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📊</div>
+                <h4>No attendance recorded</h4>
+                <p>Members haven't checked in today. Start by checking in members!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="dashboard-section">
+    <div class="section-header">
+        <div class="section-title">
+            <div class="section-title-icon">⏰</div>
+            <span>Slot Capacity Status</span>
+        </div>
+    </div>
+    
+    <div class="slots-grid">
+        {% for slot in data.slot_status %}
+        <div class="slot-card">
+            <div class="slot-header">
+                <span class="slot-name">{{ slot.slot_name }}</span>
+                <span class="slot-time">{{ slot.start_time }} - {{ slot.end_time }}</span>
+            </div>
+            <div class="slot-stats">
+                <span>📌 Occupancy</span>
+                <span><strong>{{ slot.status.total_members }}</strong> / {{ slot.status.max_capacity }}</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill 
+                    {% if slot.status.percentage < 50 %}progress-fill-low
+                    {% elif slot.status.percentage < 80 %}progress-fill-medium
+                    {% else %}progress-fill-high
+                    {% endif %}" 
+                    style="width: {{ slot.status.percentage }}%;">
+                </div>
+            </div>
+            <div class="slot-stats">
+                <span>✅ Available: {{ slot.status.available }} spots</span>
+                <span>📊 {{ slot.status.percentage }}% filled</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    var refreshInterval;
+    var isRefreshing = false;
+    
+    function showRefreshSpinner() {
+        var spinner = document.getElementById('refreshSpinner');
+        if (spinner) {
+            spinner.className = 'refresh-spinner refresh-spinner-active';
+        }
+    }
+    
+    function hideRefreshSpinner() {
+        var spinner = document.getElementById('refreshSpinner');
+        if (spinner) {
+            spinner.className = 'refresh-spinner';
+        }
+    }
+    
+    function fetchRealtimeData() {
+        if (isRefreshing) {
+            return;
+        }
+        isRefreshing = true;
+        showRefreshSpinner();
+        
+        fetch('/api/realtime_data')
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                var insideCount = document.getElementById('inside_count');
+                var insideBadge = document.getElementById('inside_badge');
+                if (insideCount) {
+                    insideCount.innerHTML = data.current_inside;
+                }
+                if (insideBadge) {
+                    insideBadge.innerHTML = data.current_inside;
+                }
+                
+                var membersList = document.getElementById('inside_members_list');
+                if (data.inside_members && data.inside_members.length > 0) {
+                    var html = '';
+                    for (var i = 0; i < data.inside_members.length; i++) {
+                        var member = data.inside_members[i];
+                        var firstLetter = '?';
+                        var name = 'Unknown';
+                        var trainer = 'Not Assigned';
+                        var phone = 'No phone';
+                        var checkinTime = 'Just now';
+                        
+                        if (Array.isArray(member)) {
+                            if (member[1]) {
+                                name = member[1];
+                                firstLetter = name.charAt(0).toUpperCase();
+                            }
+                            if (member[3]) {
+                                trainer = member[3];
+                            }
+                            if (member[2]) {
+                                phone = member[2];
+                            }
+                            if (member[4]) {
+                                checkinTime = member[4];
+                            }
+                        } else if (typeof member === 'object') {
+                            if (member.name) {
+                                name = member.name;
+                                firstLetter = name.charAt(0).toUpperCase();
+                            }
+                            if (member.trainer_name) {
+                                trainer = member.trainer_name;
+                            }
+                            if (member.phone) {
+                                phone = member.phone;
+                            }
+                            if (member.checkin_time) {
+                                checkinTime = member.checkin_time;
+                            }
+                        }
+                        
+                        html += '<div class="member-item">';
+                        html += '<div class="member-info">';
+                        html += '<div class="member-avatar">' + firstLetter + '</div>';
+                        html += '<div class="member-details">';
+                        html += '<div class="member-name">' + name + '</div>';
+                        html += '<div class="member-meta">';
+                        html += '<span>🏋️ Trainer: ' + trainer + '</span>';
+                        html += '<span>📞 ' + phone + '</span>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '<div class="member-status">';
+                        html += '<div class="status-badge status-inside">';
+                        html += '<span class="live-dot"></span>';
+                        html += 'Since: ' + checkinTime;
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                    }
+                    membersList.innerHTML = html;
+                } else {
+                    membersList.innerHTML = '<div class="empty-state">' +
+                        '<div class="empty-icon">🏋️‍♂️</div>' +
+                        '<h4>No members inside</h4>' +
+                        '<p>The gym is empty right now. Members will appear here when they check in.</p>' +
+                        '</div>';
+                }
+            })
+            .catch(function(error) {
+                console.log('Error fetching realtime data:', error);
+            })
+            .finally(function() {
+                isRefreshing = false;
+                hideRefreshSpinner();
+            });
+    }
+    
+    refreshInterval = setInterval(fetchRealtimeData, 10000);
+    fetchRealtimeData();
+    
+    window.addEventListener('beforeunload', function() {
+        if (refreshInterval) {
+            clearInterval(refreshInterval);
+        }
+    });
+</script>
+{% endblock %}

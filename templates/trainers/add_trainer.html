@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block page_title %}Add Trainer{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .btn-submit {
+        background: #e94560;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+    }
+</style>
+
+<div class="form-container">
+    <h2 style="margin-bottom: 25px;">Add New Trainer</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" required placeholder="Enter trainer name">
+        </div>
+        
+        <div class="form-group">
+            <label>Speciality</label>
+            <input type="text" name="speciality" required placeholder="e.g., Yoga, Cardio, Strength">
+        </div>
+        
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" required placeholder="10-digit number">
+        </div>
+        
+        <div class="form-group">
+            <label>Available Slots</label>
+            <input type="text" name="available_slots" placeholder="e.g., Morning, Evening">
+        </div>
+        
+        <button type="submit" class="btn-submit">Add Trainer</button>
+    </form>
+</div>
+{% endblock %}

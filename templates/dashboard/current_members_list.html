@@ -1,0 +1,24 @@
+<div class="member-list">
+    {% if members %}
+        {% for member in members %}
+        <div class="member-item">
+            <div>
+                <div class="member-name">
+                    <span class="status-dot"></span>
+                    {{ member.name if member.name is defined else member[1] }}
+                </div>
+                <div class="trainer-name">
+                    Trainer: {{ member.trainer_name if member.trainer_name is defined else member[3] }}
+                </div>
+            </div>
+            <div class="member-time">
+                Since: {{ member.checkin_time if member.checkin_time is defined else member[4] }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 40px; color: #999;">
+            No members currently inside
+        </div>
+    {% endif %}
+</div>

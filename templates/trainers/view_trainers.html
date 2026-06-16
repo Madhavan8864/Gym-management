@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block page_title %}Trainers Management{% endblock %}
+
+{% block content %}
+<style>
+    .actions-bar {
+        margin-bottom: 20px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-primary {
+        background: #e94560;
+        color: white;
+    }
+    
+    .trainers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .trainer-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    
+    .trainer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .trainer-avatar {
+        font-size: 50px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .trainer-name {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+        color: #1a1a2e;
+    }
+    
+    .trainer-speciality {
+        text-align: center;
+        color: #e94560;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .trainer-info {
+        font-size: 13px;
+        color: #666;
+        padding: 8px 0;
+        border-top: 1px solid #eee;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .btn-edit {
+        background: #17a2b8;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 12px;
+        flex: 1;
+        text-align: center;
+    }
+    
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 12px;
+        flex: 1;
+        text-align: center;
+    }
+</style>
+
+<div class="actions-bar">
+    <a href="{{ url_for('add_trainer') }}" class="btn btn-primary">➕ Add New Trainer</a>
+</div>
+
+<div class="trainers-grid">
+    {% if trainers %}
+        {% for trainer in trainers %}
+        <div class="trainer-card">
+            <div class="trainer-avatar">🏋️</div>
+            <div class="trainer-name">{{ trainer[1] }}</div>
+            <div class="trainer-speciality">{{ trainer[2] }}</div>
+            <div class="trainer-info">📞 {{ trainer[3] }}</div>
+            <div class="trainer-info">⏰ Available: {{ trainer[4] if trainer[4] else 'Flexible' }}</div>
+            <div class="action-buttons">
+                <a href="{{ url_for('edit_trainer', trainer_id=trainer[0]) }}" class="btn-edit">Edit</a>
+                <a href="{{ url_for('delete_trainer', trainer_id=trainer[0]) }}" class="btn-delete" onclick="return confirm('Delete this trainer?')">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 50px; background: white; border-radius: 15px;">
+            No trainers found. Add your first trainer!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

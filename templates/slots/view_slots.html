@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block page_title %}Time Slots{% endblock %}
+
+{% block content %}
+<style>
+    .actions-bar {
+        margin-bottom: 20px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-primary {
+        background: #e94560;
+        color: white;
+    }
+    
+    .slots-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .slots-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 15px;
+        text-align: left;
+    }
+    
+    .slots-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .slot-time {
+        font-weight: bold;
+        color: #e94560;
+    }
+    
+    .capacity-bar {
+        background: #eee;
+        border-radius: 10px;
+        overflow: hidden;
+        width: 150px;
+    }
+    
+    .capacity-fill {
+        background: #2ecc71;
+        height: 8px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .btn-edit {
+        background: #17a2b8;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+    
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+</style>
+
+<div class="actions-bar">
+    <a href="{{ url_for('add_slot') }}" class="btn btn-primary">➕ Add Time Slot</a>
+    <a href="{{ url_for('slot_capacity') }}" class="btn btn-primary" style="background: #17a2b8;">📊 View Capacity</a>
+</div>
+
+<table class="slots-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Slot Name</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Max Capacity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if slots %}
+            {% for slot in slots %}
+            <tr>
+                <td>{{ slot[0] }}</td>
+                <td><strong>{{ slot[1] }}</strong></td>
+                <td class="slot-time">{{ slot[2] }}</td>
+                <td class="slot-time">{{ slot[3] }}</td>
+                <td>{{ slot[4] }} members</td>
+                <td class="action-buttons">
+                    <a href="{{ url_for('edit_slot', slot_id=slot[0]) }}" class="btn-edit">Edit</a>
+                    <a href="{{ url_for('delete_slot', slot_id=slot[0]) }}" class="btn-delete" onclick="return confirm('Delete this slot?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 40px;">No time slots found</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

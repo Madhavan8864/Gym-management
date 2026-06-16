@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block page_title %}Trainer Schedule{% endblock %}
+
+{% block content %}
+<style>
+    .schedule-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .trainer-header {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .slot-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .slot-time {
+        background: #e94560;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        display: inline-block;
+        font-size: 12px;
+    }
+    
+    .member-count {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+
+<div class="schedule-container">
+    <div class="trainer-header">
+        <h2>🏋️ {{ trainer[1] }}'s Schedule</h2>
+        <p>{{ trainer[2] }} Specialist | 📞 {{ trainer[3] }}</p>
+    </div>
+    
+    <h3>Assigned Members by Time Slot</h3>
+    
+    {% if schedule %}
+        {% for slot_name, members in schedule.items() %}
+            {% if members %}
+            <div class="slot-card">
+                <div class="slot-time">{{ slot_name }}</div>
+                <div class="member-count">{{ members|length }} members assigned</div>
+                <ul style="margin-top: 10px;">
+                    {% for member in members %}
+                    <li>{{ member.name }} - {{ member.status }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div style="background: white; border-radius: 15px; padding: 40px; text-align: center;">
+            No members assigned to this trainer
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

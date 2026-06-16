@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block page_title %}Inactive Members{% endblock %}
+
+{% block content %}
+<style>
+    .member-table {
+        width: 100%;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .member-table th {
+        background: #1a1a2e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+    
+    .member-table td {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+</style>
+
+<h2>Inactive Members</h2>
+
+<table class="member-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Join Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if report.inactive_members %}
+            {% for member in report.inactive_members %}
+            <tr>
+                <td>{{ member[1] }}</td>
+                <td>{{ member[2] }}</td>
+                <td>{{ member[6] }}</td>
+                <td style="color: #e74c3c;">Inactive</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 40px;">No inactive members</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}
